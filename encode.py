@@ -21,3 +21,8 @@ encoded = Dense(32, activation='relu')(input_layer)
 decoded = Dense(n_wavelengths, activation='sigmoid')(encoded)
 autoencoder = Model(input_layer, decoded)
 
+encoder = Model(input_layer, encoded)
+
+encoded_input = Input(shape=(32,))
+decoder_layer = autoencoder.layers[-1]
+decoder = Model(encoded_input, decoder_layer(encoded_input))
