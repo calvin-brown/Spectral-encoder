@@ -30,7 +30,7 @@ max_fwhm = 20
 fwhm_range = max_fwhm - min_fwhm
 noise_power = 0.001
 
-spectra = np.zeros((n_spectra, n_samples))
+spectra = np.zeros((n_spectra, n_samples), dtype='float32')
 wavelengths = np.linspace(min_wavelength, max_wavelength, n_samples)
 
 for i in range(n_spectra):
