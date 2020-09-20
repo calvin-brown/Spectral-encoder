@@ -16,7 +16,7 @@ def calculate_std(fwhm):
     return fwhm / 2.355
 
 
-n_spectra = 10000
+n_spectra = 100000
 min_wavelength = 400
 max_wavelength = 700
 wavelength_range = max_wavelength - min_wavelength
