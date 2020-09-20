@@ -5,10 +5,14 @@ Created on Sun Aug 30 17:58:44 2020
 @author: Calvin Brown
 """
 
+from os.path import join
+from datetime import datetime
+
 import numpy as np
 
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.models import Model
+from tensorflow.keras.callbacks import EarlyStopping, TensorBoard
 from tensorflow.keras import optimizers
 from scipy.signal import find_peaks
 from matplotlib import pyplot as plt
@@ -28,23 +32,29 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # create autoencoder model
+n_neurons = 64
 input_spectrum = Input(shape=(n_wavelengths,))
-encoded = Dense(32, activation='relu')(input_spectrum)
+encoded = Dense(n_neurons, activation='relu')(input_spectrum)
 decoded = Dense(n_wavelengths, activation='sigmoid')(encoded)
 autoencoder = Model(input_spectrum, decoded)
 
 encoder = Model(input_spectrum, encoded)
 
-encoded_input = Input(shape=(32,))
+encoded_input = Input(shape=(n_neurons,))
 decoder_layer = autoencoder.layers[-1]
 decoder = Model(encoded_input, decoder_layer(encoded_input))
 
 opt = optimizers.Adam(lr=1e-3)
-autoencoder.compile(optimizer=opt, loss='binary_crossentropy')
+autoencoder.compile(optimizer=opt, loss='mse')
+
+# callbacks
+earlystopper = EarlyStopping(patience=10)
+tensorboard = TensorBoard(join('logs', datetime.now().strftime('%m%d-%H%M%S')))
 
 # train model
-autoencoder.fit(X_train, X_train, epochs=50, batch_size=256,
-                validation_data=(X_test, X_test))
+autoencoder.fit(X_train, X_train, epochs=5000, batch_size=256,
+                validation_data=(X_test, X_test),
+                callbacks=[earlystopper, tensorboard])
 
 # evaluate model
 encoded_spectra = encoder.predict(X_test)
