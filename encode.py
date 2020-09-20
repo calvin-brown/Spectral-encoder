@@ -17,10 +17,11 @@ from matplotlib import pyplot as plt
 # load spectral data
 spectra = np.load('simulated_spectra.npy')
 (n_spectra, n_wavelengths) = spectra.shape
+wavelengths = np.linspace(400, 700, n_wavelengths)
 
 # preprocess and split data
 test_frac = 0.1
-split_idx = np.round(n_spectra * (1 - test_frac))
+split_idx = int(np.round(n_spectra * (1 - test_frac)))
 X_train = spectra[:split_idx, :]
 X_test = spectra[split_idx:, :]
 n_train = X_train.shape[0]
@@ -49,22 +50,12 @@ autoencoder.fit(X_train, X_train, epochs=50, batch_size=256,
 encoded_spectra = encoder.predict(X_test)
 decoded_spectra = decoder.predict(encoded_spectra)
 
-for i in np.random.choice()
-
-n = 10  # how many digits we will display
-plt.figure(figsize=(20, 4))
-for i in range(n):
-    # display original
-    ax = plt.subplot(2, n, i + 1)
-    plt.imshow(x_test[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-    # display reconstruction
-    ax = plt.subplot(2, n, i + 1 + n)
-    plt.imshow(decoded_imgs[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-plt.show()
+for i in np.random.choice(n_test, 5):
+    
+    fig, ax = plt.subplots()
+    ax.plot(wavelengths, X_test[i], label='y')
+    ax.plot(wavelengths, decoded_spectra[i, :], label='yhat')
+    
+    ax.set_xlabel('wavelength (nm)')
+    ax.set_ylabel('intensity')
+    ax.legend()
