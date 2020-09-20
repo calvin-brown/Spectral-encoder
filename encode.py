@@ -32,27 +32,33 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # create autoencoder model
-n_neurons = 64
-input_spectrum = Input(shape=(n_wavelengths,))
-encoded = Dense(n_neurons, activation='relu')(input_spectrum)
-decoded = Dense(n_wavelengths, activation='sigmoid')(encoded)
-autoencoder = Model(input_spectrum, decoded)
+encoder_input = Input(shape=(n_wavelengths,))
+x = Dense(256, activation='relu')(encoder_input)
+x = Dense(128, activation='relu')(x)
+x = Dense(64, activation='relu')(x)
+encoder_output = Dense(32, activation='relu')(x)
 
-encoder = Model(input_spectrum, encoded)
+encoder = Model(encoder_input, encoder_output)
 
-encoded_input = Input(shape=(n_neurons,))
-decoder_layer = autoencoder.layers[-1]
-decoder = Model(encoded_input, decoder_layer(encoded_input))
+decoder_input = Input(shape=(32,))
+x = Dense(64, activation='relu')(decoder_input)
+x = Dense(128, activation='relu')(x)
+x = Dense(256, activation='relu')(x)
+decoder_output = Dense(n_wavelengths, activation='sigmoid')(x)
 
-opt = optimizers.Adam(lr=1e-3)
+decoder = Model(decoder_input, decoder_output)
+
+autoencoder = Model(encoder_input, decoder(encoder(encoder_input)))
+
+opt = optimizers.Adam(lr=1e-4)
 autoencoder.compile(optimizer=opt, loss='mse')
 
 # callbacks
-earlystopper = EarlyStopping(patience=10)
+earlystopper = EarlyStopping(patience=20)
 tensorboard = TensorBoard(join('logs', datetime.now().strftime('%m%d-%H%M%S')))
 
 # train model
-autoencoder.fit(X_train, X_train, epochs=5000, batch_size=256,
+autoencoder.fit(X_train, X_train, epochs=50000, batch_size=256,
                 validation_data=(X_test, X_test),
                 callbacks=[earlystopper, tensorboard])
 
