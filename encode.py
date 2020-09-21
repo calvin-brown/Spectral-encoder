@@ -33,17 +33,19 @@ n_test = X_test.shape[0]
 
 # create autoencoder model
 encoder_input = Input(shape=(n_wavelengths,))
-x = Dense(256, activation='relu')(encoder_input)
+x = Dense(512, activation='relu')(encoder_input)
+x = Dense(512, activation='relu')(x)
 x = Dense(128, activation='relu')(x)
-x = Dense(64, activation='relu')(x)
+x = Dense(128, activation='relu')(x)
 encoder_output = Dense(32, activation='relu')(x)
 
 encoder = Model(encoder_input, encoder_output)
 
 decoder_input = Input(shape=(32,))
-x = Dense(64, activation='relu')(decoder_input)
+x = Dense(128, activation='relu')(decoder_input)
 x = Dense(128, activation='relu')(x)
-x = Dense(256, activation='relu')(x)
+x = Dense(512, activation='relu')(x)
+x = Dense(512, activation='relu')(x)
 decoder_output = Dense(n_wavelengths, activation='sigmoid')(x)
 
 decoder = Model(decoder_input, decoder_output)
@@ -54,7 +56,7 @@ opt = optimizers.Adam(lr=1e-4)
 autoencoder.compile(optimizer=opt, loss='mse')
 
 # callbacks
-earlystopper = EarlyStopping(patience=20)
+earlystopper = EarlyStopping(patience=500)
 tensorboard = TensorBoard(join('logs', datetime.now().strftime('%m%d-%H%M%S')))
 
 # train model
