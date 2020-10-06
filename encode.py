@@ -37,11 +37,11 @@ x = Dense(512, activation='relu')(encoder_input)
 x = Dense(512, activation='relu')(x)
 x = Dense(128, activation='relu')(x)
 x = Dense(128, activation='relu')(x)
-encoder_output = Dense(32, activation='relu')(x)
+encoder_output = Dense(16, activation='relu')(x) # 32
 
 encoder = Model(encoder_input, encoder_output)
 
-decoder_input = Input(shape=(32,))
+decoder_input = Input(shape=(16,))
 x = Dense(128, activation='relu')(decoder_input)
 x = Dense(128, activation='relu')(x)
 x = Dense(512, activation='relu')(x)
