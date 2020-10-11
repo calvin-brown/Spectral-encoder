@@ -56,7 +56,7 @@ for i in range(n_spectra):
 
 np.save('simulated_spectra', spectra)
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(10, 8))
 ax.plot(wavelengths, curr_spectrum)
 ax.set_xlabel('wavelength (nm)')
 ax.set_ylabel('intensity')
