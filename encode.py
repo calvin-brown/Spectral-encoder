@@ -14,6 +14,7 @@ from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import EarlyStopping, TensorBoard
 from tensorflow.keras import optimizers
+from tensorflow.keras.regularizers import L1
 from scipy.signal import find_peaks
 from matplotlib import pyplot as plt
 
@@ -32,28 +33,28 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # create autoencoder model
+reg = L1(1e-6)
 encoder_input = Input(shape=(n_wavelengths,))
-x = Dense(512, activation='relu')(encoder_input)
-x = Dense(512, activation='relu')(x)
-x = Dense(128, activation='relu')(x)
-x = Dense(128, activation='relu')(x)
-encoder_output = Dense(16, activation='relu')(x) # 32
+x = Dense(512, activation='relu', activity_regularizer=reg)(encoder_input)
+x = Dense(512, activation='relu', activity_regularizer=reg)(x)
+x = Dense(128, activation='relu', activity_regularizer=reg)(x)
+x = Dense(128, activation='relu', activity_regularizer=reg)(x)
+encoder_output = Dense(16, activation='relu', activity_regularizer=reg)(x) # 32
 
 encoder = Model(encoder_input, encoder_output)
 
 decoder_input = Input(shape=(16,))
-x = Dense(128, activation='relu')(decoder_input)
-x = Dense(128, activation='relu')(x)
-x = Dense(512, activation='relu')(x)
-x = Dense(512, activation='relu')(x)
+x = Dense(128, activation='relu', activity_regularizer=reg)(decoder_input)
+x = Dense(128, activation='relu', activity_regularizer=reg)(x)
+x = Dense(512, activation='relu', activity_regularizer=reg)(x)
+x = Dense(512, activation='relu', activity_regularizer=reg)(x)
 decoder_output = Dense(n_wavelengths, activation='sigmoid')(x)
 
 decoder = Model(decoder_input, decoder_output)
-
 autoencoder = Model(encoder_input, decoder(encoder(encoder_input)))
 
 opt = optimizers.Adam(lr=1e-4)
-autoencoder.compile(optimizer=opt, loss='mse')
+autoencoder.compile(optimizer=opt, loss='mse', metrics='mse')
 
 # callbacks
 earlystopper = EarlyStopping(patience=500)
