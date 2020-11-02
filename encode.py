@@ -78,3 +78,17 @@ for i in np.random.choice(n_test, 5):
     ax.set_xlabel('wavelength (nm)')
     ax.set_ylabel('intensity')
     ax.legend()
+
+colors = plt.get_cmap('tab20').colors
+fig, ax = plt.subplots()
+ax.set_prop_cycle(color=colors)
+for i in range(16):
+    
+    encoded = np.zeros((1, 16))
+    encoded[0, i] = 0.01
+    prediction = decoder.predict(encoded)[0]
+    ax.plot(wavelengths, prediction)
+    
+ax.set_xlabel('wavelength (nm)')
+ax.set_ylabel('intensity')
+
