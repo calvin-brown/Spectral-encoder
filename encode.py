@@ -33,7 +33,7 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # create autoencoder model
-reg = L1(1e-6)
+reg = L1(1e-5)
 encoder_input = Input(shape=(n_wavelengths,))
 x = Dense(512, activation='relu', activity_regularizer=reg)(encoder_input)
 x = Dense(512, activation='relu', activity_regularizer=reg)(x)
