@@ -76,7 +76,7 @@ use_symm = False
 lr = 1e-5
 bs = 128
 neurons = [2048,2048,2048]
-dropouts = [0.03, 0.03, 0.03]
+dropouts = [0.2, 0.2, 0.2]
 use_bn = True
 tag = ''
 
@@ -166,7 +166,7 @@ for i in range(1):
     while curr_lr >= lr / 10:
         
         opt = keras.optimizers.Adam(lr=curr_lr)
-        model.compile(loss='mse', optimizer=opt)
+        model.compile(loss='mse', optimizer=opt, metrics=['mse'])
         
         history = model.fit(X_train, y_train, batch_size=bs, epochs=1000000, validation_data=(X_test, y_test), callbacks=[checkpointer, tensorboard], verbose=2)
     
@@ -175,7 +175,7 @@ for i in range(1):
         curr_lr = curr_lr * np.sqrt(0.1)
         
         # restore best weights
-        model.load_weights(join(paths[train_runs[-1]], 'networks', filename, 'weights.hdf5'))
+        model.load_weights(join('networks', filename, 'weights.hdf5'))
         
         print('Best val loss so far', model.evaluate(X_test, y_test))
     
@@ -194,7 +194,7 @@ sort_idx = np.argsort(mse)
 # np.save(join(paths[train_runs[-1]], 'networks', filename, 'history_train_loss'), train_loss)
 # np.save(join(paths[train_runs[-1]], 'networks', filename, 'history_val_loss'), val_loss)
 
-n_to_plot = 21
+n_to_plot = 11
 idx = np.linspace(0, n_test_samples-1, n_to_plot).astype(int)
 percentiles = np.linspace(100, 0, n_to_plot)
 wavelengths = np.linspace(480, 750, n_spec_pixels)
