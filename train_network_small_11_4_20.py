@@ -74,9 +74,9 @@ def load_data(train_runs, test_run, grid_tag):
 square_size = 1
 use_symm = False
 lr = 1e-5
-bs = 128
-neurons = [2048,2048,2048]
-dropouts = [0.2, 0.2, 0.2]
+bs = 1024
+neurons = [2048,2048,2048,2048]
+dropouts = [0.5, 0.5, 0.5, 0.5]
 use_bn = True
 tag = ''
 
@@ -166,7 +166,7 @@ for i in range(1):
     while curr_lr >= lr / 10:
         
         opt = keras.optimizers.Adam(lr=curr_lr)
-        model.compile(loss='mse', optimizer=opt, metrics=['mse'])
+        model.compile(loss='mse', optimizer=opt)
         
         history = model.fit(X_train, y_train, batch_size=bs, epochs=1000000, validation_data=(X_test, y_test), callbacks=[checkpointer, tensorboard], verbose=2)
     
@@ -184,10 +184,12 @@ print('calculating loss...')
 # train_loss = np.array(train_loss)
 # val_loss = np.array(val_loss)
 yhat = model.predict(X_test)
-mse = []
-for i in range(n_test_samples):
-    mse.append(model.evaluate(np.expand_dims(X_test[i, :], axis=0), np.expand_dims(y_test[i, :], axis=0), verbose=0))
-mse = np.array(mse)
+mse = np.mean(np.square(yhat - y_test), axis=1)
+
+# mse = []
+# for i in range(n_test_samples):
+#     mse.append(model.evaluate(np.expand_dims(X_test[i, :], axis=0), np.expand_dims(y_test[i, :], axis=0), verbose=0))
+# mse = np.array(mse)
 sort_idx = np.argsort(mse)
 # np.save(join(paths[train_runs[-1]], 'networks', filename, 'yhat'), yhat) # yhat and loss stay in chron order
 # np.save(join(paths[train_runs[-1]], 'networks', filename, 'loss'), mse)
