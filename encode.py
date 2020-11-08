@@ -39,7 +39,7 @@ x = Dense(512, activation='relu', activity_regularizer=reg)(encoder_input)
 x = Dense(512, activation='relu', activity_regularizer=reg)(x)
 x = Dense(128, activation='relu', activity_regularizer=reg)(x)
 x = Dense(128, activation='relu', activity_regularizer=reg)(x)
-encoder_output = Dense(16, activation='relu', activity_regularizer=reg)(x) # 32
+encoder_output = Dense(16, activation='relu')(x) # 32
 
 encoder = Model(encoder_input, encoder_output)
 
@@ -48,7 +48,7 @@ x = Dense(128, activation='relu', activity_regularizer=reg)(decoder_input)
 x = Dense(128, activation='relu', activity_regularizer=reg)(x)
 x = Dense(512, activation='relu', activity_regularizer=reg)(x)
 x = Dense(512, activation='relu', activity_regularizer=reg)(x)
-decoder_output = Dense(n_wavelengths, activation='sigmoid')(x)
+decoder_output = Dense(n_wavelengths)(x)
 
 decoder = Model(decoder_input, decoder_output)
 autoencoder = Model(encoder_input, decoder(encoder(encoder_input)))
