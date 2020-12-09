@@ -24,7 +24,7 @@ def create_random_spec():
         center = np.random.choice(wavelengths)
         power = np.random.rand() * power_range + min_power
         fwhm = np.random.rand() * fwhm_range + min_fwhm
-        # print('center', center, 'power', power, 'fwhm', fwhm)
+        print(f'center {center:.2f} power {power:.2f} fwhm {fwhm:.2f}')
         
         curr_peak = norm.pdf(wavelengths, center, calculate_std(fwhm))
         curr_peak = curr_peak * (power / np.max(curr_peak))
