@@ -16,7 +16,7 @@ The hope is that autoencoders can learn more efficient ways of compressing signa
 ### Optical spectra and hyperspectral imaging
 Typically, optical spectra are captured by a spectrometer and used to identify/quantify the presence of materials with known spectral features or peaks. In this project, we simulate spectra as combinations of Gaussian peaks with varying intensity and bandwidth (FWHM):
 
-![Examples of simulated spectra](/spectra.png)
+![Examples of simulated spectra](/spectra.svg)
 
 For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression.
 
