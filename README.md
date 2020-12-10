@@ -1,5 +1,9 @@
 # spectral-encoder
-This repository explores autoencoders for compressing one-dimensional signals (specifically with optical spectra in mind).
+## Introduction
+This repository explores autoencoders for the compression of one-dimensional signals. Specifically, we have the compression of optical spectra in mind as a target application.
+
+### Autoencoders
+Autoencoder networks are a typical 
 
 Typically, optical spectra are captured by a spectrometer and used to identify/quantify the presence of materials with known spectral features or peaks. In this project, we simulate spectra as combinations of Gaussian peaks and other simple waveforms. For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression.
 
