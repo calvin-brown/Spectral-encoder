@@ -1,6 +1,6 @@
 # spectral-encoder
 ## Introduction
-This repository explores autoencoders for the compression of one-dimensional signals. Specifically, we have the compression of optical spectra in mind as a target application. We will find that the networks learn to essentially lowpass filter the spectra, preserving the general shape of spectral features while sacraficing small, high frequency variations. This aligns well with intuition and in fact with practical compression algorithms.
+This repository explores autoencoders for the compression of one-dimensional signals. Specifically, we have the compression of optical spectra in mind as a target application. We will find that the networks learn to essentially lowpass filter the spectra, preserving the general shape of spectral features while sacrificing small, high frequency variations. This aligns well with intuition and in fact with practical compression algorithms.
 
 ### Autoencoders
 Autoencoder networks are a common type of neural network, with a tell-tale hourglass shape:
