@@ -7,7 +7,7 @@ Autoencoder networks are a common type of neural network, with a tell-tale hourg
 
 ![Examples of autoencoders](/images/autoencoder_architectures.png)
 
-The purpose of these networks is to learn to compress the input data (signals, images, etc.), thereby saving memory and/or making data transmission faster. The first half of the network is called the encoder, which learns to convert the input signal into a much more compact representation at the narrow bottleneck in the middle. The second half of the network is the decoder, which takes the output from the encoder and attempts to faithfully reconstruct the original (uncompressed) signal from it.
+The purpose of these networks is to learn a compressed representation of the input data (signals, images, etc.). This of course can save memory and/or make data transmission faster, but autoencoders are also important for tasks such as image denoising and image generation. The first half of the network is called the encoder, which learns to convert the input signal into a much more compact representation at the narrow bottleneck in the middle. The second half of the network is the decoder, which takes the output from the encoder and attempts to faithfully reconstruct the original (uncompressed) signal from it.
 
 A typical encoder (sans machine learning) might be designed to leverage knowledge of the expected signal characteristics to encode efficiently. For example, saving a signal in a particular basis in which it is sparse will reduce the memory required. This is why simple graphics composed of just a few lines/shapes can be saved in much smaller vector files than in raster image files because they are sparse in the vector object basis (but not necessarily in the pixel basis).
 
