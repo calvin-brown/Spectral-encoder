@@ -21,3 +21,7 @@ Typically, optical spectra are captured by a spectrometer and used to identify/q
 For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression. While compression may not be necessary when capturing a spectrum of, e.g., a sample in the lab, it is critical in high-throughput spectroscopy applications. Notably, hyperspectral imaging requires obtaining a spectrum for each pixel in an image, often at 10s of frames per second and maybe mounted on a drone. In these situations, compressing spectra for processing and transmission is much more critical.
 
 ## Generating spectra
+generate_spectra.py creates spectra by adding a random number of Gaussian peaks with random center wavelength and bandwidth. spectra.npy contains spectra used for training and validation data. spectra_narrow.npy contains spectra (with narrower peaks) used for blind testing.
+
+## Training the network
+
