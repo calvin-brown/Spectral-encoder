@@ -18,8 +18,6 @@ Typically, optical spectra are captured by a spectrometer and used to identify/q
 
 ![Examples of simulated spectra](/images/spectra.svg)
 
-For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression.
+For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression. While compression may not be necessary when capturing a spectrum of, e.g., a sample in the lab, it is critical in high-throughput spectroscopy applications. Notably, hyperspectral imaging requires obtaining a spectrum for each pixel in an image, often at 10s of frames per second and maybe mounted on a drone. In these situations, compressing spectra for processing and transmission is much more critical.
 
-
-
-In this repo, we explore a few different types of spectra: those that are sparse in the spatial (or "intensity") domain and those that are sparse in the spectral (or frequency) domain. An example of a signal that is sparse in the spatial domain would be a point source of light, and an example of a signal that is sparse in the spectral domain would be a narrow-bandwidth laser
+## Generating spectra
