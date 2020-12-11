@@ -33,4 +33,11 @@ IMAGE OF VALIDATION SPECTRA RECONSRUCTION
 
 IMAGES OF NARROWER SPECTRA RECONSTRUCTIONS
 
-The fits are still pretty good, but there are errors in the flat regions of the spectra, especially right next to strong peaks. Specifically, the reconstructions tend to overshoot and dip below zero on either side of the peaks. Th
+The fits are still pretty good, but there are errors in the flat regions of the spectra, especially right next to strong peaks. Specifically, the reconstructions tend to overshoot and dip below zero on either side of the peaks. Even in flat regions of the spectra far away from peaks, there are ripples in the output spectra. These are indications that the autoencoder has essentially learned an approximation of a **lowpass filter.**
+
+## Comparison between trained autoencoder and lowpass filter
+Below, I've added a curve to the plots for the input signal after being run through a lowpass filter.
+
+IMAGES OF NARROWER RECONSTRUCTIONS WITH LOWPASS TOO
+
+Clearly, a part of what the autoencoder has learned is that to best reproduce the input signals (minimize mean squared error or MSE), it is most important to preserve the low frequency content at the expense of the higher frequency content. This aligns with the spirit of many compression approaches, for example the JPEG standard for images. JPEG prioritizes conserving luminance over color information and low spatial frequencies over higher ones. As with our autoencoder, this enables maximum compression without an unacceptable loss in fidelity. In our case we were concerned about the MSE between the input and output spectra, while JPEG is concerned with maintaining image quality for the human visual system.
