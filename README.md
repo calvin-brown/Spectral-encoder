@@ -21,12 +21,16 @@ Typically, optical spectra are captured by a spectrometer and used to identify/q
 For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression. While compression may not be necessary when capturing a spectrum of, e.g., a sample in the lab, it is critical in high-throughput spectroscopy applications. Notably, hyperspectral imaging requires obtaining a spectrum for each pixel in an image, often at 10s of frames per second and maybe mounted on a drone. In these situations, compressing spectra for processing and transmission is much more critical.
 
 ## Generating spectra
-generate_spectra.py creates spectra by adding a random number of Gaussian peaks with random center wavelength and bandwidth. spectra.npy contains spectra used for training and validation data. spectra_narrow.npy contains spectra (with narrower peaks) used for blind testing. It turns out that shifting the distribution of the testing data towards higher spatial frequencies (i.e. narrower peaks) will demonstrate that the autoencoder network tends to learn to lowpass filter the input spectra.
+`generate_spectra.py` creates spectra by adding a random number of Gaussian peaks with random center wavelength and bandwidth. spectra.npy contains spectra used for training and validation data. spectra_narrow.npy contains spectra (with narrower peaks) used for blind testing. It turns out that shifting the distribution of the testing data towards higher spatial frequencies (i.e. narrower peaks) will demonstrate that the autoencoder network tends to learn to lowpass filter the input spectra.
 
 ## Training the network
-The autoencoder class is contained in autoencoder.py. train_network.py trains the encoder using an Adam optimizer with a learning rate of 2e-4. The input (and output) spectra contain 1000 points, whereas the latent space contains just 16 nodes, meaning the compression ratio is 1000 / 1.6 = 62.5.  After training, it is clear that the network is able to qualitatively reconstruct unseen spectra quite well:
+The autoencoder class is contained in `autoencoder.py`. `train_network.py` trains the encoder using an Adam optimizer with a learning rate of 2e-4. The input (and output) spectra contain 1000 points, whereas the latent space contains just 16 nodes, meaning the compression ratio is 1000 / 1.6 = 62.5.  After training, it is clear that the network is able to qualitatively reconstruct unseen spectra quite well:
 
 IMAGE OF VALIDATION SPECTRA RECONSRUCTION
 
 ## Testing the network on narrower peaks
-test_network.py
+`test_network.py` evaluated the trained network on spectra with *slightly narrower* peak bandwidths than were contained in the training dataset. The reconstructions predictably degrade somewhat, but do so in an interesting manner:
+
+IMAGES OF NARROWER SPECTRA RECONSTRUCTIONS
+
+The fits are still pretty good, but there are errors in the flat regions of the spectra, especially right next to strong peaks. Specifically, the reconstructions tend to overshoot and dip below zero on either side of the peaks. Th
