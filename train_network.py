@@ -27,7 +27,7 @@ max_wavelength = 700
 wavelengths = np.linspace(min_wavelength, max_wavelength, n_wavelengths)
 
 # Preprocess and split data.
-test_frac = 0.1
+test_frac = 0.01
 split_idx = int(n_spectra * (1-test_frac))
 X_train = spectra[:split_idx, :]
 X_test = spectra[split_idx:, :]
@@ -35,17 +35,17 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # Create autoencoder model.
-neurons = [256, 64]
+neurons = [128, 32]
 latent_size = 16
 autoencoder = Autoencoder(neurons, latent_size, n_wavelengths)
-opt = optimizers.Adam(lr=2e-4)
+opt = optimizers.Adam(lr=1e-4)
 autoencoder.compile(optimizer=opt, loss='mse')
 
 # Create callbacks.
 filename = datetime.now().strftime('%m%d-%H%M%S')
 os.mkdir(join('logs', filename))
 os.mkdir(join('networks', filename))
-earlystopper = EarlyStopping(patience=500)
+earlystopper = EarlyStopping(patience=100)  # 500)
 tensorboard = TensorBoard(join('logs', filename))
 checkpointer = ModelCheckpoint(
     filepath=join('networks', filename, 'weights.hdf5'),
