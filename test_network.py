@@ -5,6 +5,7 @@ Created on Wed Dec  9 10:34:25 2020
 @author: Calvin
 """
 
+import pickle
 from os.path import join
 
 import numpy as np
@@ -14,39 +15,9 @@ from tensorflow.keras import optimizers
 from tensorflow.keras.models import load_model
 
 
-filename = '1210-200051'  # [512,64,16], 1e-4, 256. Good, nice step drop
-filename = '1210-222215'  # [256,64,16], 1e-4, 256. Better, but no step
-filename = '1211-074003'  # [256,64,16], 2e-4, 256. Best and nice step
-filename = '1211-101050'  # [256,64,16], 2e-4, 256. Worse, no step
-filename = '1211-114513'  # [256,64,16], 2e-4, 256. No step
-filename = '1211-130852'  # [256,64,16], 2e-4, 256. 
-
-# Load spectral data. Testing on spectra with narrower peaks (i.e. higher
-# spatial frequency content) compared to the training data
-spectra = np.load('spectra_narrow.npy')
-n_spectra, n_wavelengths = spectra.shape
-min_wavelength = 400
-max_wavelength = 700
-wavelengths = np.linspace(min_wavelength, max_wavelength, n_wavelengths)
-
-# Load trained autoencoder.
-autoencoder = load_model(join('networks', filename, 'model'))
-opt = optimizers.Adam()
-autoencoder.compile(optimizer=opt, loss='mse')
-decoded_spectra = autoencoder(spectra)
-
-# Create lowpass filter.
-fs = (n_wavelengths-1) / 300  # Sampling freq. Samples per nm
-fc = 0.07  # Cutoff freq. Cycles per nm
-nyq = 0.5 * fs
-fc_norm = fc / nyq  # Cutoff freq normalized by Nyquist freq.
-order = 5
-sos = butter(order, fc_norm, btype='lowpass', output='sos')
-
-# Plot random spectra.
-for i in np.random.choice(n_spectra, 5):
-    filtered_spec = sosfiltfilt(sos, spectra[i, :])
-    xf = np.arange(n_wavelengths) * fs / n_wavelengths
+def plot_spectrum(spectrum, decoded_spec):
+    filtered_spec = sosfiltfilt(sos, spectrum)
+    # xf = np.arange(n_wavelengths) * fs / n_wavelengths
     xf_shift = (
         np.arange(-n_wavelengths/2, n_wavelengths/2) * (fs/n_wavelengths)
         )
@@ -54,7 +25,7 @@ for i in np.random.choice(n_spectra, 5):
     fig, axs = plt.subplots(2, 1, figsize=(12, 8))
     fig.set_tight_layout(True)
     for spec, name in zip(
-            [spectra[i, :], filtered_spec, decoded_spectra[i, :]],
+            [spectrum, filtered_spec, decoded_spec],
             ['Raw', 'Filtered', 'Reconstructed']
             ):
         F = np.fft.fft(spec)
@@ -71,6 +42,70 @@ for i in np.random.choice(n_spectra, 5):
     axs[1].set_ylabel('Intensity (AU)')
     axs[1].grid()
     axs[1].legend()
+
+
+filename = '1210-200051'  # [512,64,16], 1e-4, 256. Good, nice step drop
+filename = '1210-222215'  # [256,64,16], 1e-4, 256. Better, but no step
+filename = '1211-074003'  # [256,64,16], 2e-4, 256. Best and nice step
+filename = '1211-101050'  # [256,64,16], 2e-4, 256. Worse, no step
+filename = '1211-114513'  # [256,64,16], 2e-4, 256. No step
+filename = '1211-130852'  # [256,64,16], 2e-4, 256. No step
+filename = '1211-145437'  # [256,64,16], 1e-4, 256, wider. Peaks too wide
+filename = '1211-164537'  # [256,64,16], 1e-4, 256, narrower. Bad fits
+filename = '1211-173918'  # [256,64,16], 3e-4, 256, narrower. Bad fits
+filename = '1211-185601'  # [256,64,16], 1e-4, 256, 5-30nm. okay
+filename = '1211-225501'  # [256,64,16], same as above?
+filename = '1212-090545'  # [256,64,16], 1e-4, 256, 10-30 MANY.
+filename = '1212-145708'  # [256,64,16], 3e-4, 256, 5-100.
+filename = '1212-171041'  # [256,32,16], 1e-3, 256, 5-100. GOOD! fits okay and narrow peaks clearly filter
+
+# Load spectral data. Testing on spectra with narrower peaks (i.e. higher
+# spatial frequency content) compared to the training data
+# spectra = np.load('spectra_narrow.npy')
+spectra = np.load('spectra.npy')
+n_spectra, n_wavelengths = spectra.shape
+min_wavelength = 400
+max_wavelength = 700
+wavelengths = np.linspace(min_wavelength, max_wavelength, n_wavelengths)
+with open('peak_data.txt', 'rb') as f:
+    peaks = pickle.load(f)
+
+# Preprocess and split data.
+test_frac = 0.01
+split_idx = int(n_spectra * (1-test_frac))
+X_train = spectra[:split_idx, :]
+X_test = spectra[split_idx:, :]
+n_train = X_train.shape[0]
+n_test = X_test.shape[0]
+peaks_test = peaks[split_idx:]
+
+# Load trained autoencoder.
+autoencoder = load_model(join('networks', filename, 'model'))
+opt = optimizers.Adam()
+autoencoder.compile(optimizer=opt, loss='mse')
+decoded_spectra = autoencoder(X_test)
+
+# Create lowpass filter.
+fs = (n_wavelengths-1) / 300  # Sampling freq. Samples per nm
+fc = 0.07  # Cutoff freq. Cycles per nm
+nyq = 0.5 * fs
+fc_norm = fc / nyq  # Cutoff freq normalized by Nyquist freq.
+order = 5
+sos = butter(order, fc_norm, btype='lowpass', output='sos')
+
+# # Plot random spectra.
+# for i in np.random.choice(n_test, 50):
+#     plot_spectrum(X_test[i, :], decoded_spectra[i, :])
+
+# Find narrow spectra.
+good_idx = []
+for i in range(n_test):
+    if np.max(peaks_test[i][2]) < 15:
+        good_idx.append(i)
+
+# Plot random narrow spectra.
+for i in np.random.choice(len(good_idx), 50):
+    plot_spectrum(X_test[good_idx[i], :], decoded_spectra[good_idx[i], :])
 
 # # FFT tests.
 # n = 500  # even
