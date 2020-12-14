@@ -38,7 +38,7 @@ n_test = X_test.shape[0]
 neurons = [128, 32]
 latent_size = 16
 autoencoder = Autoencoder(neurons, latent_size, n_wavelengths)
-opt = optimizers.Adam(lr=1e-4)
+opt = optimizers.Adam(lr=2e-4)
 autoencoder.compile(optimizer=opt, loss='mse')
 
 # Create callbacks.
