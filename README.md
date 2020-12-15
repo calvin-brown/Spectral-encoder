@@ -20,7 +20,7 @@ The hope is that autoencoders can learn more efficient ways of compressing signa
 ### Optical spectra and hyperspectral imaging
 Typically, optical spectra are captured by a spectrometer and used to identify/quantify the presence of materials with known spectral features or peaks. In this project, we simulate spectra as combinations of Gaussian peaks with varying intensity and bandwidth (FWHM):
 
-![Examples of simulated spectra](/images/spectra.svg)
+![Examples of simulated spectra](/images/sample_spectra.svg)
 
 For sparse spectra (few peaks and features), we hope that an autoencoder is able to learn a rather efficient representation, leading to a high rate of compression. While compression may not be necessary when capturing a spectrum for, e.g., a sample in the lab, it can be more useful in high-throughput spectroscopy applications. Notably, hyperspectral imaging requires obtaining a spectrum for each pixel in an image, often at 10s of frames per second and maybe mounted on a drone. In these situations, compressing spectra for processing and transmission is much more critical.
 
@@ -30,11 +30,12 @@ For sparse spectra (few peaks and features), we hope that an autoencoder is able
 ## Training the network
 The autoencoder class is contained in `autoencoder.py`. `train_network.py` trains the encoder using an Adam optimizer with a learning rate of 2e-4. The input (and output) spectra contain 1000 points, whereas the latent space contains just 16 nodes, meaning the compression ratio is 1000 / 1.6 = 62.5.  After training, it is clear that the network is able to qualitatively reconstruct unseen spectra quite well:
 
-IMAGE OF VALIDATION SPECTRA RECONSRUCTION
+![Examples of output on validation spectra](/images/val_spectrum1.svg)
+![Examples of output on validation spectra](/images/val_spectrum2.svg)
 
 A TensorBoard log of the training process is contained in the `logs` folder. Because we could afford to generate a large amount of data (1e6 spectra) and our network size was modest (XXX parameters), little, if any overfitting occurs:
 
-TENSORBOARD PLOT
+![TensorBoard plot of loss curves](/images/log.png)
 
 ## Testing the network on narrower peaks
 `test_network.py` evaluates the trained autoencoder network on blind testing spectra that were not contained in the train/validation data:
