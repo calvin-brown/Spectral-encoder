@@ -40,15 +40,15 @@ A TensorBoard log of the training process is contained in the `logs` folder. Bec
 ## Testing the network on narrower peaks
 `test_network.py` evaluates the trained autoencoder network on blind testing spectra that were not contained in the train/validation data:
 
-###Broad peaks:
+### Broad peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum1.svg)
 
-###Broad and narrow peaks:
+### Broad and narrow peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum2.svg)
 
-###Narrow peaks:
+### Narrow peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum3.svg)
 
@@ -57,15 +57,15 @@ The fits look good, but there are errors in the flat regions of the spectra, esp
 ## Comparison between trained autoencoder and lowpass filter
 Below, I've added a curve to the plots for the input signal after being run through a lowpass filter. The Fourier transform of the spectra is also shown on the top plots. Especially for spectra with narrow peaks (corresponding to a broader range of frequencies), we see that the network output closely matches the lowpass filtered input.
 
-###Broad peaks:
+### Broad peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum1_fourier.svg)
 
-###Broad and narrow peaks:
+### Broad and narrow peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum2_fourier.svg)
 
-###Narrow peak:
+### Narrow peak:
 
 ![Examples of output on test spectra](/images/test_spectrum3_fourier.svg)
 
