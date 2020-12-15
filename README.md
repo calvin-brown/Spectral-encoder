@@ -40,13 +40,17 @@ A TensorBoard log of the training process is contained in the `logs` folder. Bec
 ## Testing the network on narrower peaks
 `test_network.py` evaluates the trained autoencoder network on blind testing spectra that were not contained in the train/validation data:
 
-IMAGES OF NARROWER SPECTRA RECONSTRUCTIONS
+![Examples of output on test spectra](/images/test_spectrum1.svg)
+![Examples of output on test spectra](/images/test_spectrum2.svg)
+![Examples of output on test spectra](/images/test_spectrum3.svg)
 
 The fits look good, but there are errors in the flat regions of the spectra, especially right next to strong peaks. Specifically, the reconstructions tend to overshoot and dip below zero on either side of the peaks. These are indications that the autoencoder has essentially learned an approximation of a **lowpass filter.**
 
 ## Comparison between trained autoencoder and lowpass filter
 Below, I've added a curve to the plots for the input signal after being run through a lowpass filter. Especially for spectra with narrow peaks (corresponding to a broader range of frequencies), we see that the network output closely matches the lowpass filtered input:
 
-IMAGES OF NARROWER RECONSTRUCTIONS WITH LOWPASS TOO
+![Examples of output on test spectra](/images/test_spectrum1_fourier.svg)
+![Examples of output on test spectra](/images/test_spectrum2_fourier.svg)
+![Examples of output on test spectra](/images/test_spectrum3_fourier.svg)
 
 Clearly, a part of what the autoencoder has learned is that to best reproduce the input signals (minimize mean squared error or MSE), it is most important to preserve the low frequency content at the expense of the higher frequency content. This aligns with the spirit of many compression approaches, for example denoising is a common use for autoencoders and typically involves lowpass filtering the data under the assumption that the high frequency content has a lower signal to noise ratio (SNR) than the low frequncy content. The JPEG standard for image compression takes a similar approach. JPEG prioritizes conserving luminance over chrominance (color) information and low spatial frequencies over higher ones. As with our autoencoder, this enables maximum compression without an unacceptable loss in fidelity. In our case we were concerned about the MSE between the input and output spectra, while JPEG is concerned with maintaining image quality for the human visual system.
