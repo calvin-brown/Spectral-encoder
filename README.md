@@ -47,12 +47,17 @@ A TensorBoard log of the training process is contained in the `logs` folder. Bec
 The fits look good, but there are errors in the flat regions of the spectra, especially right next to strong peaks. Specifically, the reconstructions tend to overshoot and dip below zero on either side of the peaks. These are indications that the autoencoder has essentially learned an approximation of a **lowpass filter.**
 
 ## Comparison between trained autoencoder and lowpass filter
-Below, I've added a curve to the plots for the input signal after being run through a lowpass filter. The Fourier transform of the spectra is also shown on the top plots. Especially for spectra with narrow peaks (corresponding to a broader range of frequencies), we see that the network output closely matches the lowpass filtered input:
+Below, I've added a curve to the plots for the input signal after being run through a lowpass filter. The Fourier transform of the spectra is also shown on the top plots. Especially for spectra with narrow peaks (corresponding to a broader range of frequencies), we see that the network output closely matches the lowpass filtered input.
+
+Broad peaks:
 
 ![Examples of output on test spectra](/images/test_spectrum1_fourier.svg)
 
+Broad and narrow peaks:
+
 ![Examples of output on test spectra](/images/test_spectrum2_fourier.svg)
 
+Narrow peak:
 
 ![Examples of output on test spectra](/images/test_spectrum3_fourier.svg)
 
