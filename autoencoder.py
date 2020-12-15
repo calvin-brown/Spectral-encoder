@@ -34,21 +34,6 @@ class Autoencoder(Model):
             decoder_layers.append(Dense(n, activation=a))
         self.decoder = Sequential(decoder_layers)
 
-        # self.encoder = Sequential([
-        #     Dense(512, activation='relu'),
-        #     Dense(512, activation='relu'),
-        #     Dense(128, activation='relu'),
-        #     Dense(128, activation='relu'),
-        #     Dense(16, activation='relu'),
-        # ])
-        # self.decoder = Sequential([
-        #     Dense(128, activation='relu'),
-        #     Dense(128, activation='relu'),
-        #     Dense(512, activation='relu'),
-        #     Dense(512, activation='relu'),
-        #     Dense(n_wavelengths)
-        # ])
-
     def call(self, x):
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)

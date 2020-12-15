@@ -36,14 +36,13 @@ def create_random_spec():
     if add_noise:
         curr_spectrum += np.random.normal(0, noise_power, n_wavelengths)
 
-    # return np.abs(curr_spectrum), peak_data
     return curr_spectrum, peak_data
 
 
 # Define constants.
-is_narrowband = False
+is_test = True
 add_noise = True
-n_spectra = 1000000
+n_spectra = 10000 if is_test else 1000000
 min_wavelength = 400
 max_wavelength = 700
 n_wavelengths = 1000
@@ -52,14 +51,10 @@ max_n_peaks = 4
 min_power = 0.1
 max_power = 1
 power_range = max_power - min_power
-noise_power = 0.003
-if is_narrowband:
-    min_fwhm = 5
-    max_fwhm = 15
-else:
-    min_fwhm = 2  # 10
-    max_fwhm = 100  # 30
+min_fwhm = 1
+max_fwhm = 100
 fwhm_range = max_fwhm - min_fwhm
+noise_power = 0.003
 
 # Generate random spectra.
 spectra = np.zeros((n_spectra, n_wavelengths), dtype='float32')
@@ -68,12 +63,12 @@ for i in range(n_spectra):
     spectra[i, :], curr_peak_data = create_random_spec()
     peaks.append(curr_peak_data)
 
-np.save(f'spectra{"_narrow" if is_narrowband else ""}', spectra)
-with open('peak_data.txt', 'wb') as f:
+np.save(f'spectra_{"test" if is_test else "train"}', spectra)
+with open(f'peak_data_{"test" if is_test else "train"}.txt', 'wb') as f:
     pickle.dump(peaks, f)
 
 # Plot random spectra.
-fig, ax = plt.subplots(figsize=(9, 5))
+fig, ax = plt.subplots(figsize=(10, 5))
 for i in np.random.choice(n_spectra, 6):
     ax.plot(wavelengths, spectra[i, :])
     ax.set_xlabel('Wavelength (nm)')

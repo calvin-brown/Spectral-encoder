@@ -20,7 +20,7 @@ from autoencoder import Autoencoder
 
 
 # Load spectral data.
-spectra = np.load('spectra.npy')
+spectra = np.load('spectra_train.npy')
 n_spectra, n_wavelengths = spectra.shape
 min_wavelength = 400
 max_wavelength = 700
@@ -45,7 +45,7 @@ autoencoder.compile(optimizer=opt, loss='mse')
 filename = datetime.now().strftime('%m%d-%H%M%S')
 os.mkdir(join('logs', filename))
 os.mkdir(join('networks', filename))
-earlystopper = EarlyStopping(patience=100)  # 500)
+earlystopper = EarlyStopping(patience=100)
 tensorboard = TensorBoard(join('logs', filename))
 checkpointer = ModelCheckpoint(
     filepath=join('networks', filename, 'weights.hdf5'),
@@ -71,9 +71,9 @@ autoencoder.save(join('networks', filename, 'model'))
 # Plot random spectral reconstructions.
 decoded_spectra = autoencoder(X_test)
 for i in np.random.choice(n_test, 5):
-    fig, ax = plt.subplots(figsize=(9, 5))
-    ax.plot(wavelengths, X_test[i, :], label='y')
-    ax.plot(wavelengths, decoded_spectra[i, :], label='yhat')
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(wavelengths, X_test[i, :], label='Raw')
+    ax.plot(wavelengths, decoded_spectra[i, :], label='Reconstructed')
 
     ax.set_xlabel('Wavelength (nm)')
     ax.set_ylabel('Intensity (AU)')
